@@ -1,0 +1,34 @@
+{% extends 'servicios/base.html' %}
+
+{% block content %}
+
+    {% if lista_clientes %}
+        <h2>Clientes</h2>
+               
+        <table class="table">
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Descripción</th>
+                <th>Teléfono</th>
+            </tr>
+            
+            {% for cliente in lista_clientes %}
+                <tr>
+                    <td><a href="{% url 'servicios:cliente' cliente.id %}">{{cliente.nombre}}</td>
+                    <td>{{cliente.direccion}}</td>
+                    <td>{{cliente.descripcion}}</td>
+                    <td>{{cliente.telefono}}</td>
+                </tr>
+            {% endfor %}
+            
+        </table>
+        
+    {% else %}
+        <p>No hay clientes disponibles</p>
+    {% endif %}
+    
+<p><a href="{% url 'servicios:nuevo_cliente' %}"><button type="button" class="btn btn-primary">Agregar Cliente</button></a></p>
+
+
+{% endblock %}

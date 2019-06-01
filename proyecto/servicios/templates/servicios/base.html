@@ -1,0 +1,66 @@
+{% load static %}
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Electrónica Rivadavia</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+        <!-- <link rel="stylesheet" href="{% static 'css/blog.css' %}"> -->
+        
+    </head>
+
+<body>
+    
+    <div class="page-header">
+        <h1><a href="/servicios">Electrónica Rivadavia</a></h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+            {% block content %}
+            {% endblock %}
+            </div>
+            
+            <div class="bg-light border-right" id="sidebar-wrapper">
+                <div class="sidebar-heading">Secciones</div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'servicios:index' %}" class="list-group-item list-group-item-action bg-light">Servicios</a>
+                    <a href="{% url 'servicios:clientes' %}" class="list-group-item list-group-item-action bg-light">Clientes</a>
+                    <a href="{% url 'servicios:cuadrillas' %}" class="list-group-item list-group-item-action bg-light">Cuadrillas</a>
+                    <a href="#" class="list-group-item list-group-item-action bg-light">Ventas</a>
+                    <a href="#" class="list-group-item list-group-item-action bg-light">Productos</a>
+                    <a href="#" class="list-group-item list-group-item-action bg-light">Capacitaciones</a>
+                    <a href="#" class="list-group-item list-group-item-action bg-light">Vehículos</a>
+                    <a href="#" class="list-group-item list-group-item-action bg-light">Facturación</a>
+                    <a href="#" class="list-group-item list-group-item-action bg-light">Permisos</a>
+                    <a href="#" class="list-group-item list-group-item-action bg-light">Inventario</a>
+                    
+                </div>
+            </div>
+    
+        </div>
+    </div>
+
+<br>
+<br>
+
+<footer class="fixed-bottom float-right">
+    {% if user.is_authenticated %}
+    <p class="float-right">
+        Usuario Activo: {{ user.username }}
+        <a href="{% url 'logout' %}"><button type="button" class="btn btn-primary">Cerrar Sesión</button></a>
+        Rol: {{ user.groups.get }}                    
+    </p>
+    {% endif %}
+</footer>
+        
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>   
+
+
+</body>
+
+</html> 

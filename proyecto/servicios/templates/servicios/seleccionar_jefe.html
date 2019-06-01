@@ -1,0 +1,18 @@
+{% extends 'servicios/base.html' %}
+
+{% block content %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h3><b>Seleccionar Jefe de Cuadrilla:</b> {{ cuadrilla.especialidad }}</h3>
+
+<form action="{% url 'servicios:seleccionar_jefe2' cuadrilla.id %}" method="post">
+{% csrf_token %}
+{% for empleado in cuadrilla.empleadodecuadrilla_set.all %}
+    <label for="empleado{{ forloop.counter }}">{{ empleado.apellido }}</label>
+    <input type="radio" name="empleado" id="empleado{{ forloop.counter }}" value="{{ empleado.id }}" /><br/>
+{% endfor %}
+<button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+{% endblock %}

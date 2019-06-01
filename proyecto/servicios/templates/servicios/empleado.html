@@ -1,0 +1,48 @@
+{% extends 'servicios/base.html' %}
+
+{% block content %}
+
+    {% if empleado %}
+        <h2>Empleado</h2>
+               
+        <table class="table">
+            <tr>
+                <th>Legajo</th>
+                <th>Cuil</th>
+                <th>Cuadrilla</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha de nacimiento</th>                
+                <th>Empleado desde</th>
+                <th>Es jefe</th>
+                </tr>
+            
+                <tr>
+                    <td>{{empleado.legajo}}</td>
+                    <td>{{empleado.cuil}}</td>
+                    <td><a href="{% url 'servicios:cuadrilla' empleado.cuadrilla.id %}">{{empleado.cuadrilla}}</td>
+                    <td>{{empleado.nombre}}</td>
+                    <td>{{empleado.apellido}}</td>
+                    <td>{{empleado.fecha_nac}}</td>
+                    <td>{{empleado.empleado_desde}}</td>
+                    {% if empleado.es_jefe %}
+                    <td><i class="fa fa-check" aria-hidden="true"></i></td>
+                    {% else %}
+                    <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                    {% endif %}
+                </tr>
+            
+            
+        </table>
+        
+        
+    <p><a href="{% url 'servicios:editar_empleado' empleado.id %}"><button type="button" class="btn btn-primary">Editar Empleado</button></a>
+        <a href="{% url 'servicios:eliminar_empleado' empleado.id %}"><button type="button" class="btn btn-primary">Eliminar Empleado</button></a>
+        <a href="{% url 'servicios:cuadrilla' empleado.cuadrilla.id %}"><button type="button" class="btn btn-primary">Volver a Cuadrilla</button></a></p>
+
+    {% else %}
+        <p>No existe empleado</p>
+    {% endif %}
+    
+
+{% endblock %}

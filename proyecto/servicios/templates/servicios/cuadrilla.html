@@ -1,0 +1,79 @@
+{% extends 'servicios/base.html' %}
+
+{% block content %}
+
+<br>
+<h3><b>Cuadrilla</b>: {{ cuadrilla.especialidad }}</h3>
+<br>
+
+<table class="table">
+            <tr>
+                <th>Vehículo</th>
+                <th>Jefe</th>
+            </tr>
+            
+            <tr>
+                <td>{{cuadrilla.vehiculo}}</td>
+                <td>
+                {% if cuadrilla.jefe %}
+                    <a href="{% url 'servicios:empleado' cuadrilla.jefe.id %}">{{cuadrilla.jefe.apellido}}</a>
+                {% else %}
+                    No se agregó jefe a cuadrilla
+                {% endif %}
+                </td>
+            </tr>
+            
+        </table>
+        
+        <p><a href="{% url 'servicios:editar_cuadrilla' cuadrilla.id %}"><button type="button" class="btn btn-primary">Editar Cuadrilla</button></a>
+        <a href="{% url 'servicios:eliminar_cuadrilla' cuadrilla.id %}"><button type="button" class="btn btn-primary">Eliminar Cuadrilla</button></a>
+        <a href="{% url 'servicios:cuadrillas' %}"><button type="button" class="btn btn-primary">Volver a Cuadrillas</button></a></p>
+
+{% if cuadrilla.empleadodecuadrilla_set.all %}
+
+    <h4>Empleados:</h4>
+            
+        <table class="table">
+            <tr>
+                <th>Legajo</th>
+                <th>Cuil</th>
+                <th>Cuadrilla</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha de nacimiento</th>                
+                <th>Empleado desde</th>
+                <th>Es jefe</th>
+                </tr>
+                
+                {% for empleado in cuadrilla.empleadodecuadrilla_set.all %}
+                
+                <tr>
+                    <td><a href="{% url 'servicios:empleado' cuadrilla.jefe.id %}">{{empleado.legajo}}</a></td>
+                    <td>{{empleado.cuil}}</td>
+                    <td>{{empleado.cuadrilla}}</td>
+                    <td>{{empleado.nombre}}</td>
+                    <td>{{empleado.apellido}}</td>
+                    <td>{{empleado.fecha_nac}}</td>
+                    <td>{{empleado.empleado_desde}}</td>
+                    {% if empleado.es_jefe %}
+                    <td><i class="fa fa-check" aria-hidden="true"></i></td>
+                    {% else %}
+                    <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                    {% endif %}
+                </tr>
+                
+                {% endfor %}            
+            
+        </table>
+        
+        
+{% else %}
+    <p>Cuadrilla no posee empleados</p>
+{% endif %}
+
+    <p>
+        <a href="{% url 'servicios:nuevo_empleado' cuadrilla.id %}"><button type="button" class="btn btn-primary">Agregar Empleado</button></a>
+        <a href="{% url 'servicios:seleccionar_jefe' cuadrilla.id %}"><button type="button" class="btn btn-primary">Seleccionar Jefe</button></a>  
+    </p>
+
+{% endblock %}

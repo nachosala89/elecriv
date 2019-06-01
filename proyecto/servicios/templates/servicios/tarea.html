@@ -1,0 +1,59 @@
+{% extends 'servicios/base.html' %}
+
+{% block content %}
+
+
+<h3><b>Tarea</b>:</h3>
+
+<h5><b>Descripción:</b> {{ tarea.descripcion }}</h5>
+<h5><b>Servicio:</b> {{ tarea.servicio }}</h5>
+<h5><b>Estado:</b> {{ tarea.estado }}</h5>
+
+<p> 
+    <a href="{% url 'servicios:editar_tarea' tarea.id %}"><button type="button" class="btn btn-primary">Editar Tarea</button></a>
+    <a href="{% url 'servicios:eliminar_tarea' tarea.id %}"><button type="button" class="btn btn-primary">Eliminar Tarea</button></a>
+    <a href="{% url 'servicios:finalizar_tarea' tarea.id %}"><button type="button" class="btn btn-primary">Finalizar Tarea</button></a>
+    <a href="{% url 'servicios:detalle' tarea.servicio.id %}"><button type="button" class="btn btn-primary">Volver a Servicio</button></a>
+</p>
+
+
+{% if tarea.partedetrabajo_set.all %}
+    <h4>Partes de trabajo</h4>
+    <table class="table">
+            
+        <tr>
+            
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Cuadrilla</th>
+            <th>Aprobado por</th>
+        </tr>
+            
+        {% for parte in tarea.partedetrabajo_set.all %}
+            
+            <tr>
+                
+                <td><a href="{% url 'servicios:parte' parte.id %}">{{parte.descripcion}}</a></td>
+                <td>{{parte.fecha}}</td>
+                {% if parte.aprobado_por %}
+                    <td><a href="{% url 'servicios:empleado' parte.aprobado_por.id %}">{{parte.aprobado_por}}</a></td>
+                    <td><a href="{% url 'servicios:cuadrilla' parte.aprobado_por.cuadrilla.id %}">{{parte.aprobado_por.cuadrilla}}</a></td>                     
+                {% else %}
+                    <td>No seleccionada</td>
+                    <td>No aprobado</td>
+                {% endif %}
+            </tr>
+                
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No hay partes de trabajo</p>
+{% endif %}
+
+{% if es_jefecuadrilla %}
+    <p><a href="{% url 'servicios:nuevo_parte_jefe' tarea.id %}"><button type="button" class="btn btn-primary">Agregar Parte</button></a></p>
+{% else %}
+    <p><a href="{% url 'servicios:nuevo_parte' tarea.id %}"><button type="button" class="btn btn-primary">Agregar Parte</button></a></p> 
+{% endif %}            
+
+{% endblock %}

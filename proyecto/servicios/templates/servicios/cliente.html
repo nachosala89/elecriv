@@ -1,0 +1,39 @@
+{% extends 'servicios/base.html' %}
+
+{% block content %}
+
+    {% if cliente %}
+        <h2>Cliente</h2>
+               
+        <table class="table">
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Descripción</th>
+                <th>Teléfono</th>
+                </tr>
+            
+                <tr>
+                    
+                    <td>{{cliente.nombre}}</td>
+                    <td>{{cliente.direccion}}</td>
+                    <td>{{cliente.descripcion}}</td>
+                    <td>{{cliente.telefono}}</td>
+                    
+                </tr>
+            
+            
+        </table>
+        
+        <p> 
+            <a href="{% url 'servicios:editar_cliente' cliente.id %}"><button type="button" class="btn btn-primary">Editar Cliente</button></a>
+            <a href="{% url 'servicios:eliminar_cliente' cliente.id %}"><button type="button" class="btn btn-primary">Eliminar Cliente</button></a>
+            <a href="{% url 'servicios:clientes' %}"><button type="button" class="btn btn-primary">Lista Clientes</button></a>
+        </p>
+
+    {% else %}
+        <p>No existe cliente</p>
+    {% endif %}
+    
+
+{% endblock %}
