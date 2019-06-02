@@ -14,12 +14,23 @@
 {% else %}
     <h5><b>Aprobado por:</b> No seleccionada</h5>
     <h5><b>Cuadrilla:</b> No aprobado</h5>
-{% endif %}            
+{% endif %}
 
-<p> 
-    <a href="{% url 'servicios:editar_parte' parte.id %}"><button type="button" class="btn btn-primary">Editar Parte</button></a>
-    <a href="{% url 'servicios:eliminar_parte' parte.id %}"><button type="button" class="btn btn-primary">Eliminar Parte</button></a>
-    <a href="{% url 'servicios:tarea' parte.tarea.id %}"><button type="button" class="btn btn-primary">Volver a Tarea</button></a>
+<p>
+    {% if es_jefecuadrilla %}
+    <a href="{% url 'servicios:aprobar_parte' parte.id %}">
+        <button type="button" class="btn btn-primary">Aprobar parte</button>
+    </a>
+    {% endif %}
+    <a href="{% url 'servicios:editar_parte' parte.id %}">
+        <button type="button" class="btn btn-primary">Editar Parte</button>
+    </a>
+    <a href="{% url 'servicios:eliminar_parte' parte.id %}">
+        <button type="button" class="btn btn-primary">Eliminar Parte</button>
+    </a>
+    <a href="{% url 'servicios:tarea' parte.tarea.id %}">
+        <button type="button" class="btn btn-primary">Volver a Tarea</button>
+    </a>
 </p>
 
 
