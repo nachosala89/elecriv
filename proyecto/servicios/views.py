@@ -120,7 +120,7 @@ def finalizar_tarea(request, tarea_id):
 @login_required
 def parte(request, parte_id):
     parte = get_object_or_404(ParteDeTrabajo, pk=parte_id)
-    return render(request, 'servicios/parte.html', {'parte': parte})
+    return render(request, 'servicios/parte.html', {'parte': parte, 'es_jefecuadrilla': es_miembro(request, 'jefecuadrilla')})
 
 @login_required
 def nuevo_parte(request, tarea_id):
