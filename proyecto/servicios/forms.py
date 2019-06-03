@@ -25,7 +25,7 @@ class TareaForm(NicerForm):
 
     class Meta:
         model = Tarea
-        fields = ('descripcion', 'servicio', 'estado',)
+        fields = ('descripcion', 'servicio', 'estado', 'cuadrilla')
         
 
 class ParteForm(NicerForm):

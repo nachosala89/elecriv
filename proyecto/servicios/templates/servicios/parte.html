@@ -3,17 +3,17 @@
 {% block main %}
 
 
-<h3><b>Parte de trabajo</b>:</h3>
+<h3><b>Parte de trabajo</b></h3>
 
-<h5><b>Tarea:</b> {{parte.tarea}}</h5>
+<h5><b>Tarea:</b> {{parte.tarea}} ({{parte.tarea.servicio.descripcion}} - {{parte.tarea.servicio.cliente.nombre}})</h5>
 <h5><b>Descripción:</b> {{parte.descripcion}}</h5>
 <h5><b>Fecha:</b> {{parte.fecha}}</h5>
+
 {% if parte.aprobado_por %}
     <h5><b>Aprobado por:</b> <a href="{% url 'servicios:empleado' parte.aprobado_por.id %}">{{parte.aprobado_por}}</a></h5>
     <h5><b>Cuadrilla:</b> <a href="{% url 'servicios:cuadrilla' parte.aprobado_por.cuadrilla.id %}">{{parte.aprobado_por.cuadrilla}}</a></h5>                     
 {% else %}
-    <h5><b>Aprobado por:</b> No seleccionada</h5>
-    <h5><b>Cuadrilla:</b> No aprobado</h5>
+    <h5><b>Aprobado por:</b> No aprobado</h5>
 {% endif %}
 
 <p>

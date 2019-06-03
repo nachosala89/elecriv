@@ -5,9 +5,12 @@
 
 <h3><b>Tarea</b>:</h3>
 
-<h5><b>Descripción:</b> {{ tarea.descripcion }}</h5>
-<h5><b>Servicio:</b> {{ tarea.servicio }}</h5>
-<h5><b>Estado:</b> {{ tarea.estado }}</h5>
+<div class="detail">
+    <h5><b>Descripción:</b> {{ tarea.descripcion }}</h5>
+    <h5><b>Servicio:</b> {{ tarea.servicio }}</h5>
+    <h5><b>Estado:</b> {{ tarea.estado }}</h5>
+    <h5><b>Cuadrilla Asignada:</b> {{ tarea.cuadrilla }}</h5>
+</div>
 
 <p> 
     <a href="{% url 'servicios:editar_tarea' tarea.id %}"><button type="button" class="btn btn-primary">Editar Tarea</button></a>

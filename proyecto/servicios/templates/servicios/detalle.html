@@ -4,13 +4,7 @@
 
 <h3><b>Servicio</b>: {{ servicio.descripcion }}</h3>
 
-<h5><b>Cliente:</b> {{ servicio.cliente }}</h5>
-<h5><b>Fecha de solicitud:</b> {{ servicio.fecha_solcitud }}</h5>
-<h5><b>Fecha de inicio:</b> {{ servicio.fecha_inicio|default_if_none:"Fecha no definida" }}</h5>
-<h5><b>Fecha de finalización:</b> {{ servicio.fecha_fin|default_if_none:"Fecha no definida" }}</h5>
-<h5><b>Estado:</b> {{ servicio.estado }}</h5>
-
-<p>
+<div class="actions">
     <a href="{% url 'servicios:editar_servicio' servicio.id%}">
         <button type="button" class="btn btn-primary">Editar Servicio</button>
     </a>
@@ -23,7 +17,15 @@
     <a href="{% url 'servicios:nueva_tarea' servicio.id %}">
         <button type="button" class="btn btn-primary">Agregar Tarea</button>
     </a>
-</p>
+</div>
+
+<div class="detail">
+    <h5><b>Cliente:</b> {{ servicio.cliente }}</h5>
+    <h5><b>Fecha de solicitud:</b> {{ servicio.fecha_solcitud }}</h5>
+    <h5><b>Fecha de inicio:</b> {{ servicio.fecha_inicio|default_if_none:"Fecha no definida" }}</h5>
+    <h5><b>Fecha de finalización:</b> {{ servicio.fecha_fin|default_if_none:"Fecha no definida" }}</h5>
+    <h5><b>Estado:</b> {{ servicio.estado }}</h5>
+</div>
 
 {% if servicio.tarea_set.all %}
 
@@ -33,15 +35,16 @@
             <h5><a href="{% url 'servicios:tarea' tarea.id %}">{{tarea.descripcion}}</a>: <i>{{tarea.estado}}</i></h5>
 
             {% if tarea.partedetrabajo_set.all %}
-                <h6>Partes de trabajo</h6>
+                <h5>Partes de trabajo</h5>
                 <table class="table">
-
                     <tr>
-
                         <th>Descripción</th>
                         <th>Fecha</th>
                         <th>Cuadrilla</th>
                         <th>Aprobado por</th>
+                        {% if es_jefecuadrilla %}
+                        <th></th>
+                        {% endif %}
                     </tr>
 
                     {% for parte in tarea.partedetrabajo_set.all %}
@@ -57,7 +60,10 @@
                                 <td>No seleccionada</td>
                                 <td>No aprobado</td>
                                 {% if es_jefecuadrilla %}
-                                    <td><a href="{% url 'servicios:aprobar_parte' parte.id %}"><button type="button" class="btn btn-primary">Aprobar parte</button></a></td>
+                                    <td>
+                                        <a class="btn btn-primary"
+                                           href="{% url 'servicios:aprobar_parte' parte.id %}">Aprobar parte</a>
+                                    </td>
                                 {% endif %}
                             {% endif %}
 
