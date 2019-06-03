@@ -42,7 +42,7 @@
                         <th>Fecha</th>
                         <th>Cuadrilla</th>
                         <th>Aprobado por</th>
-                        {% if es_jefecuadrilla %}
+                        {% if es_coordinador %}
                         <th></th>
                         {% endif %}
                     </tr>
@@ -59,7 +59,7 @@
                             {% else %}
                                 <td>No seleccionada</td>
                                 <td>No aprobado</td>
-                                {% if es_jefecuadrilla %}
+                                {% if es_coordinador %}
                                     <td>
                                         <a class="btn btn-primary"
                                            href="{% url 'servicios:aprobar_parte' parte.id %}">Aprobar parte</a>
@@ -75,7 +75,7 @@
                 <p>No hay partes de trabajo</p>
             {% endif %}
 
-            {% if es_jefecuadrilla %}
+            {% if es_coordinador %}
                 <p><a href="{% url 'servicios:nuevo_parte_jefe' tarea.id %}"><button type="button" class="btn btn-primary">Agregar Parte</button></a></p>
             {% else %}
                 <p><a href="{% url 'servicios:nuevo_parte' tarea.id %}"><button type="button" class="btn btn-primary">Agregar Parte</button></a></p>

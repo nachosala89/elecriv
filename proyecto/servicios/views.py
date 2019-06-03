@@ -26,8 +26,8 @@ def index(request):
 @login_required
 def detalle(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
-    es_jefecuadrilla = es_miembro(request, 'jefecuadrilla')
-    context = {'servicio': servicio, 'es_jefecuadrilla': es_jefecuadrilla}
+    es_coordinador = es_miembro(request, 'coordinador')
+    context = {'servicio': servicio, 'es_coordinador': es_coordinador}
     return render(request, 'servicios/detalle.html', context)
 
 @login_required
@@ -75,8 +75,8 @@ def finalizar_servicio(request, servicio_id):
 @login_required        
 def tarea(request, tarea_id):
     tarea = get_object_or_404(Tarea, pk=tarea_id)
-    es_jefecuadrilla = es_miembro(request, 'jefecuadrilla')
-    context = {'tarea': tarea, 'es_jefecuadrilla': es_jefecuadrilla}    
+    es_coordinador = es_miembro(request, 'coordinador')
+    context = {'tarea': tarea, 'es_coordinador': es_coordinador}
     return render(request, 'servicios/tarea.html', context)
 
 @login_required
@@ -124,7 +124,7 @@ def finalizar_tarea(request, tarea_id):
 @login_required
 def parte(request, parte_id):
     parte = get_object_or_404(ParteDeTrabajo, pk=parte_id)
-    return render(request, 'servicios/parte.html', {'parte': parte, 'es_jefecuadrilla': es_miembro(request, 'jefecuadrilla')})
+    return render(request, 'servicios/parte.html', {'parte': parte, 'es_coordinador': es_miembro(request, 'coordinador')})
 
 @login_required
 def nuevo_parte(request, tarea_id):
