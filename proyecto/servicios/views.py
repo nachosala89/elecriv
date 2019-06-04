@@ -26,8 +26,8 @@ def index(request):
 @login_required
 def detalle(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
-    es_jefecuadrilla = es_miembro(request, 'jefecuadrilla')
-    context = {'servicio': servicio, 'es_jefecuadrilla': es_jefecuadrilla}
+    es_coordinador = es_miembro(request, 'coordinador')
+    context = {'servicio': servicio, 'es_coordinador': es_coordinador}
     return render(request, 'servicios/detalle.html', context)
 
 @login_required
@@ -42,6 +42,7 @@ def nuevo_servicio(request):
         form = ServicioForm(initial={'fecha_solcitud': timezone.now(), 'fecha_inicio': timezone.now(), 'estado': 'Pendiente'})
     return render(request, 'servicios/editar_servicio.html', {'form': form})
 
+
 @login_required    
 def editar_servicio(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
@@ -55,15 +56,18 @@ def editar_servicio(request, servicio_id):
         form = ServicioForm(instance=servicio)
     return render(request, 'servicios/editar_servicio.html', {'form': form})
 
+
 @login_required    
 def eliminar_servicio(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
     servicio.delete()
     return HttpResponseRedirect(reverse('servicios:index'))    
 
+
 def finalizar_servicio(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
     servicio.estado = 'Finalizado'
+    servicio.fecha_fin = timezone.now()
     servicio.save()
     return HttpResponseRedirect(reverse('servicios:detalle', args=(servicio.id,)))
     
@@ -71,8 +75,8 @@ def finalizar_servicio(request, servicio_id):
 @login_required        
 def tarea(request, tarea_id):
     tarea = get_object_or_404(Tarea, pk=tarea_id)
-    es_jefecuadrilla = es_miembro(request, 'jefecuadrilla')
-    context = {'tarea': tarea, 'es_jefecuadrilla': es_jefecuadrilla}    
+    es_coordinador = es_miembro(request, 'coordinador')
+    context = {'tarea': tarea, 'es_coordinador': es_coordinador}
     return render(request, 'servicios/tarea.html', context)
 
 @login_required
@@ -120,7 +124,7 @@ def finalizar_tarea(request, tarea_id):
 @login_required
 def parte(request, parte_id):
     parte = get_object_or_404(ParteDeTrabajo, pk=parte_id)
-    return render(request, 'servicios/parte.html', {'parte': parte})
+    return render(request, 'servicios/parte.html', {'parte': parte, 'es_coordinador': es_miembro(request, 'coordinador')})
 
 @login_required
 def nuevo_parte(request, tarea_id):
@@ -137,12 +141,13 @@ def nuevo_parte(request, tarea_id):
         form = ParteForm(initial={'tarea': tarea_id, 'fecha': timezone.now() })
     return render(request, 'servicios/editar_parte.html', {'form': form})
 
+
 def nuevo_parte_jefe(request, tarea_id):
     if request.method == "POST":
         form = ParteJefeForm(request.POST)
         if form.is_valid():
             parte = form.save(commit=False)
-            parte.aprobado_por = EmpleadoDeCuadrilla.objects.get(apellido=request.user.last_name)           
+            parte.aprobado_por = EmpleadoDeCuadrilla.objects.get(apellido=request.user.last_name)
             parte.save()
             tarea = Tarea.objects.get(pk=tarea_id)
             tarea.estado = 'En curso'

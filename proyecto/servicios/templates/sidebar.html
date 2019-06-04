@@ -1,0 +1,21 @@
+{% if user.is_authenticated %}
+<nav class="col-md-2 d-none d-md-block bg-light sidebar p-0 sidebar" style="height:100%;">
+    <div class="bg-light border-right border-bottom" id="sidebar-wrapper">
+        <div class="sidebar-heading">Secciones</div>
+        <div class="list-group list-group-flush">
+            <a href="{% url 'servicios:index' %}"
+               class="list-group-item list-group-item-action bg-light">Servicios</a>
+            <a href="{% url 'servicios:clientes' %}"
+               class="list-group-item list-group-item-action bg-light">Clientes</a>
+            <a href="{% url 'servicios:cuadrillas' %}" class="list-group-item list-group-item-action bg-light">Cuadrillas</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light">Ventas</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light">Productos</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light">Capacitaciones</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light">Vehículos</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light">Facturación</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light">Permisos</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light">Inventario</a>
+        </div>
+    </div>
+</nav>
+{% endif %}

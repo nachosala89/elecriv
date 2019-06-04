@@ -1,36 +1,73 @@
 {% extends 'servicios/base.html' %}
 
-{% block content %}
+{% block main %}
 
-    {% if lista_servicios %}
-        <h2><b>Servicios</b></h2>
-               
-        <table class="table">
-            <tr>
-                <th>Descripción</th>
-                <th>Cliente</th>
-                <th>Fecha de solicitud</th>
-                <th>Fecha de inicio</th>
-                <th>Estado</th>
-                <th>Fecha de finalización</th>           
-            </tr>
-            {% for servicio in lista_servicios %}
-                <tr>
-                    <td><a href="{% url 'servicios:detalle' servicio.id %}">{{ servicio.descripcion }}</td>
-                    <td><a href="{% url 'servicios:cliente' servicio.cliente.id %}">{{servicio.cliente}}</td>
-                    <td>{{servicio.fecha_solcitud}}</td>
-                    <td>{{servicio.fecha_inicio|default_if_none:"Fecha no definida"}}</td>
-                    <td>{{servicio.estado}}</td>
-                    <td>{{servicio.fecha_fin|default_if_none:"Fecha no definida"}}</td>
-                </tr>
-            {% endfor %}
-            
-        </table>
-        
-    {% else %}
-        <p>No hay servicios disponibles</p>
-    {% endif %}
-    
-    <p><a href="{% url 'servicios:nuevo_servicio'%}"><button type="button" class="btn btn-primary">Agregar Servicio</button></a></p>
+{% if lista_servicios %}
+<h2><b>Servicios</b></h2>
+
+<p>
+    <a href="{% url 'servicios:nuevo_servicio'%}">
+        <button type="button" class="btn btn-primary">Agregar Servicio</button>
+    </a>
+</p>
+
+
+<table class="table display" id="servicios">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Cliente</th>
+        <th>Fecha de solicitud</th>
+        <th>Fecha de inicio</th>
+        <th>Estado</th>
+        <th>Fecha de finalización</th>
+      </tr>
+    </thead>
+
+    <tbody>
+        {% for servicio in lista_servicios %}
+        <tr>
+            <td><a href="{% url 'servicios:detalle' servicio.id %}">{{ servicio.descripcion }}</td>
+            <td><a href="{% url 'servicios:cliente' servicio.cliente.id %}">{{servicio.cliente}}</td>
+            <td>{{servicio.fecha_solcitud}}</td>
+            <td>{{servicio.fecha_inicio|default_if_none:"Fecha no definida"}}</td>
+            <td>{{servicio.estado}}</td>
+            <td>{{servicio.fecha_fin|default_if_none:"Fecha no definida"}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+{% else %}
+<p>No hay servicios disponibles</p>
+{% endif %}
 
 {% endblock %}
+
+{% block scripting %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#servicios').DataTable( {
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ items por pagina",
+            "zeroRecords": "No hay elementos disponibles",
+            "info": "Página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay elementos disponibles",
+            "infoFiltered": "(de _MAX_ elementos totales)",
+            "search": "Buscar",
+            "paginate": {
+                "first":      "Primera",
+                "last":       "Última",
+                "next":       "Prox.",
+                "previous":   "Ant."
+            },
+            "aria": {
+                "sortAscending":  ": activar para ordenar ascendentemente",
+                "sortDescending": ": activar para ordenar descendentemente"
+            }
+        }});
+    });
+</script>
+{% endblock %}
+

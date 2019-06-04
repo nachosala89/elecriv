@@ -1,10 +1,16 @@
 {% extends 'servicios/base.html' %}
 
-{% block content %}
+{% block main %}
 
     {% if lista_cuadrillas %}
         <h2>Cuadrillas</h2>
-               
+
+        <p>
+            <a href="{% url 'servicios:nueva_cuadrilla' %}">
+                <button type="button" class="btn btn-primary">Agregar Cuadrilla</button>
+            </a>
+        </p>
+
         <table class="table">
             <tr>
                 <th>Especialidad</th>
@@ -31,7 +37,5 @@
     {% else %}
         <p>No hay cuadrillas disponibles</p>
     {% endif %}
-
-<p><a href="{% url 'servicios:nueva_cuadrilla' %}"><button type="button" class="btn btn-primary">Agregar Cuadrilla</button></a></p>
 
 {% endblock %}

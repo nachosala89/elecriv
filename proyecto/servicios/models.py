@@ -30,6 +30,16 @@ class Servicio(models.Model):
         return self.descripcion
 
 
+class Cuadrilla(models.Model):
+    especialidad = models.CharField(max_length=100)
+    vehiculo = models.CharField(max_length=50)
+    def jefe(self):
+        return self.empleadodecuadrilla_set.get(es_jefe=True)
+
+    def __str__(self):
+        return self.especialidad
+
+
 class Tarea(models.Model):
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE)    
     descripcion = models.CharField(max_length=200)
@@ -39,19 +49,10 @@ class Tarea(models.Model):
         ('Finalizado', 'Finalizado'),    
     )    
     estado = models.CharField(max_length=12, choices=ESTADOS)
+    cuadrilla = models.ForeignKey(Cuadrilla, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.descripcion
-
-
-class Cuadrilla(models.Model):    
-    especialidad = models.CharField(max_length=100)
-    vehiculo = models.CharField(max_length=50)
-    def jefe(self):
-        return self.empleadodecuadrilla_set.get(es_jefe=True)
-
-    def __str__(self):
-        return self.especialidad
 
 
 class EmpleadoDeCuadrilla(models.Model):

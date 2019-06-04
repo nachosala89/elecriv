@@ -1,6 +1,6 @@
 {% extends 'servicios/base.html' %}
 
-{% block content %}
+{% block main %}
     <h1>Nueva Cuadrilla</h1>
     <form method="POST" class="post-form">{% csrf_token %}
         {{ form.as_p }}
