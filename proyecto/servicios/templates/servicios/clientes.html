@@ -4,11 +4,14 @@
 
     {% if lista_clientes %}
         <h2>Clientes</h2>
+        {% if es_administrativo %}
         <p>
             <a href="{% url 'servicios:nuevo_cliente' %}">
                 <button type="button" class="btn btn-primary">Agregar Cliente</button>
             </a>
         </p>
+        {% endif %}
+        
         <table class="table">
             <tr>
                 <th>Nombre</th>

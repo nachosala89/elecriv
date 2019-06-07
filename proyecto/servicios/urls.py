@@ -34,7 +34,7 @@ urlpatterns = [
     # ex: /servicios/3/parte/nuevo
     path('<int:tarea_id>/parte/nuevo/', views.nuevo_parte, name='nuevo_parte'),
     # ex: /servicios/3/parte/jnuevo
-    path('<int:tarea_id>/parte/jnuevo/', views.nuevo_parte_jefe, name='nuevo_parte_jefe'),
+    path('<int:tarea_id>/parte/jnuevo/', views.nuevo_parte_coord, name='nuevo_parte_coord'),
     # ex: /servicios/parte/3/editar
     path('parte/<int:parte_id>/editar/', views.editar_parte, name='editar_parte'),
     #

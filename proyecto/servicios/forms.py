@@ -32,12 +32,6 @@ class ParteForm(NicerForm):
 
     class Meta:
         model = ParteDeTrabajo
-        fields = ('descripcion', 'tarea', 'fecha', 'aprobado_por')
-
-class ParteJefeForm(NicerForm):
-
-    class Meta:
-        model = ParteDeTrabajo
         fields = ('descripcion', 'tarea', 'fecha')
         
 

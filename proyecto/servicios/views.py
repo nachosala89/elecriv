@@ -8,7 +8,7 @@ from .models import Servicio, Cliente, EmpleadoDeCuadrilla, Cuadrilla, Tarea, Pa
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-from .forms import ServicioForm, TareaForm, ParteForm, ParteJefeForm, ClienteForm, CuadrillaForm, EmpleadoForm
+from .forms import ServicioForm, TareaForm, ParteForm, ClienteForm, CuadrillaForm, EmpleadoForm
 
 from django.contrib.auth.decorators import login_required
 
@@ -16,10 +16,14 @@ from django.contrib.auth.models import User
 
 from django.utils import timezone
 
+from django.db.models import Q
+
 @login_required
 def index(request):
     lista_servicios = Servicio.objects.order_by('-fecha_solcitud')[:20]
-    context = {'lista_servicios': lista_servicios}
+    es_coordinador = es_miembro(request, 'coordinador')
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'lista_servicios': lista_servicios, 'es_coordinador': es_coordinador, 'es_administrativo': es_administrativo}
     return render(request, 'servicios/index.html', context)
 
             
@@ -27,7 +31,8 @@ def index(request):
 def detalle(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
     es_coordinador = es_miembro(request, 'coordinador')
-    context = {'servicio': servicio, 'es_coordinador': es_coordinador}
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'servicio': servicio, 'es_coordinador': es_coordinador, 'es_administrativo': es_administrativo}
     return render(request, 'servicios/detalle.html', context)
 
 @login_required
@@ -66,9 +71,18 @@ def eliminar_servicio(request, servicio_id):
 
 def finalizar_servicio(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
-    servicio.estado = 'Finalizado'
-    servicio.fecha_fin = timezone.now()
-    servicio.save()
+    es_coordinador = es_miembro(request, 'coordinador')
+    es_administrativo = es_miembro(request, 'administrativo')
+    if servicio.tarea_set.filter(~Q(estado='Finalizado')).exists():
+        return render(request, 'servicios/detalle.html', {
+        'servicio': servicio,
+        'error_message': 'No se puede finalizar servicio. Existe al menos una tarea sin finalizar.',
+        'es_administrativo': es_administrativo,
+        'es_coordinador': es_coordinador})
+    else:
+        servicio.estado = 'Finalizado'
+        servicio.fecha_fin = timezone.now()
+        servicio.save()
     return HttpResponseRedirect(reverse('servicios:detalle', args=(servicio.id,)))
     
 
@@ -76,7 +90,8 @@ def finalizar_servicio(request, servicio_id):
 def tarea(request, tarea_id):
     tarea = get_object_or_404(Tarea, pk=tarea_id)
     es_coordinador = es_miembro(request, 'coordinador')
-    context = {'tarea': tarea, 'es_coordinador': es_coordinador}
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'tarea': tarea, 'es_coordinador': es_coordinador, 'es_administrativo': es_administrativo}
     return render(request, 'servicios/tarea.html', context)
 
 @login_required
@@ -116,8 +131,15 @@ def eliminar_tarea(request, tarea_id):
 
 def finalizar_tarea(request, tarea_id):
     tarea = get_object_or_404(Tarea, pk=tarea_id)
-    tarea.estado = 'Finalizado'
-    tarea.save()
+    es_coordinador = es_miembro(request, 'coordinador')
+    if tarea.partedetrabajo_set.filter(aprobado_por=None).exists():
+        return render(request, 'servicios/tarea.html', {
+        'tarea': tarea,
+        'error_message': 'No se puede finalizar tarea. Existe al menos un parte sin aprobar.',
+        'es_coordinador': es_coordinador})
+    else:    
+        tarea.estado = 'Finalizado'
+        tarea.save()    
     return HttpResponseRedirect(reverse('servicios:tarea', args=(tarea.id,)))
 
 
@@ -136,25 +158,35 @@ def nuevo_parte(request, tarea_id):
             tarea = Tarea.objects.get(pk=tarea_id)
             tarea.estado = 'En curso'
             tarea.save()
+            servicio = Servicio.objects.get(pk=tarea.servicio.id)
+            servicio.estado = 'En curso'
+            if servicio.fecha_inicio == None:
+                servicio.fecha_inicio = parte.fecha
+            servicio.save() 
             return HttpResponseRedirect(reverse('servicios:parte', args=(parte.id,)))
     else:
         form = ParteForm(initial={'tarea': tarea_id, 'fecha': timezone.now() })
     return render(request, 'servicios/editar_parte.html', {'form': form})
 
 
-def nuevo_parte_jefe(request, tarea_id):
+def nuevo_parte_coord(request, tarea_id):
     if request.method == "POST":
-        form = ParteJefeForm(request.POST)
+        form = ParteForm(request.POST)
         if form.is_valid():
             parte = form.save(commit=False)
-            parte.aprobado_por = EmpleadoDeCuadrilla.objects.get(apellido=request.user.last_name)
+            parte.aprobado_por = request.user
             parte.save()
             tarea = Tarea.objects.get(pk=tarea_id)
             tarea.estado = 'En curso'
             tarea.save()
+            servicio = Servicio.objects.get(pk=tarea.servicio.id)
+            servicio.estado = 'En curso'
+            if servicio.fecha_inicio == None:
+                servicio.fecha_inicio = parte.fecha
+            servicio.save() 
             return HttpResponseRedirect(reverse('servicios:parte', args=(parte.id,)))
     else:
-        form = ParteJefeForm(initial={'tarea': tarea_id, 'fecha': timezone.now()})
+        form = ParteForm(initial={'tarea': tarea_id, 'fecha': timezone.now()})
     return render(request, 'servicios/editar_parte.html', {'form': form})
 
 @login_required    
@@ -179,7 +211,7 @@ def eliminar_parte(request, parte_id):
 
 def aprobar_parte(request, parte_id):
     parte = get_object_or_404(ParteDeTrabajo, pk=parte_id)
-    parte.aprobado_por = EmpleadoDeCuadrilla.objects.get(apellido=request.user.last_name)
+    parte.aprobado_por = request.user
     parte.save()
     return HttpResponseRedirect(reverse('servicios:parte', args=(parte_id,)))    
 
@@ -187,13 +219,16 @@ def aprobar_parte(request, parte_id):
 @login_required
 def clientes(request):
     lista_clientes = Cliente.objects.order_by('-nombre')[:20]
-    context = {'lista_clientes': lista_clientes}
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'lista_clientes': lista_clientes, 'es_administrativo': es_administrativo}
     return render(request, 'servicios/clientes.html', context)
 
 @login_required
 def cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, pk=cliente_id)
-    return render(request, 'servicios/cliente.html', {'cliente': cliente})
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'cliente': cliente, 'es_administrativo': es_administrativo}
+    return render(request, 'servicios/cliente.html', context)
 
 @login_required
 def nuevo_cliente(request):
@@ -230,7 +265,9 @@ def eliminar_cliente(request, cliente_id):
 @login_required
 def empleado(request, empleado_id):
     empleado = get_object_or_404(EmpleadoDeCuadrilla, pk=empleado_id)
-    return render(request, 'servicios/empleado.html', {'empleado': empleado})
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'empleado': empleado, 'es_administrativo':es_administrativo}
+    return render(request, 'servicios/empleado.html', context)
 
 @login_required
 def nuevo_empleado(request, cuadrilla_id):
@@ -268,13 +305,16 @@ def eliminar_empleado(request, empleado_id):
 @login_required
 def cuadrillas(request):
     lista_cuadrillas = Cuadrilla.objects.order_by('-especialidad')[:10]
-    context = {'lista_cuadrillas': lista_cuadrillas}
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'lista_cuadrillas': lista_cuadrillas, 'es_administrativo': es_administrativo}
     return render(request, 'servicios/cuadrillas.html', context)
 
 @login_required
 def cuadrilla(request, cuadrilla_id):
     cuadrilla = get_object_or_404(Cuadrilla, pk=cuadrilla_id)
-    return render(request, 'servicios/cuadrilla.html', {'cuadrilla': cuadrilla})
+    es_administrativo = es_miembro(request, 'administrativo')
+    context = {'cuadrilla': cuadrilla, 'es_administrativo': es_administrativo}
+    return render(request, 'servicios/cuadrilla.html', context)
 
 @login_required
 def nueva_cuadrilla(request):

@@ -25,9 +25,13 @@
             
         </table>
         
-        <p><a href="{% url 'servicios:editar_cuadrilla' cuadrilla.id %}"><button type="button" class="btn btn-primary">Editar Cuadrilla</button></a>
+        <p>
+        {% if es_administrativo %}
+        <a href="{% url 'servicios:editar_cuadrilla' cuadrilla.id %}"><button type="button" class="btn btn-primary">Editar Cuadrilla</button></a>
         <a href="{% url 'servicios:eliminar_cuadrilla' cuadrilla.id %}"><button type="button" class="btn btn-primary">Eliminar Cuadrilla</button></a>
+        {% endif %}
         <a href="{% url 'servicios:cuadrillas' %}"><button type="button" class="btn btn-primary">Volver a Cuadrillas</button></a></p>
+        
 
 {% if cuadrilla.empleadodecuadrilla_set.all %}
 
@@ -48,7 +52,7 @@
                 {% for empleado in cuadrilla.empleadodecuadrilla_set.all %}
                 
                 <tr>
-                    <td><a href="{% url 'servicios:empleado' cuadrilla.jefe.id %}">{{empleado.legajo}}</a></td>
+                    <td><a href="{% url 'servicios:empleado' empleado.id %}">{{empleado.legajo}}</a></td>
                     <td>{{empleado.cuil}}</td>
                     <td>{{empleado.cuadrilla}}</td>
                     <td>{{empleado.nombre}}</td>
@@ -71,9 +75,11 @@
     <p>Cuadrilla no posee empleados</p>
 {% endif %}
 
-    <p>
-        <a href="{% url 'servicios:nuevo_empleado' cuadrilla.id %}"><button type="button" class="btn btn-primary">Agregar Empleado</button></a>
-        <a href="{% url 'servicios:seleccionar_jefe' cuadrilla.id %}"><button type="button" class="btn btn-primary">Seleccionar Jefe</button></a>  
-    </p>
+{% if es_administrativo %}
+<p>
+    <a href="{% url 'servicios:nuevo_empleado' cuadrilla.id %}"><button type="button" class="btn btn-primary">Agregar Empleado</button></a>
+    <a href="{% url 'servicios:seleccionar_jefe' cuadrilla.id %}"><button type="button" class="btn btn-primary">Seleccionar Jefe</button></a>  
+</p>
+{% endif %}
 
 {% endblock %}

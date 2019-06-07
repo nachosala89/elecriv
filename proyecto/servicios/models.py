@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -49,7 +50,7 @@ class Tarea(models.Model):
         ('Finalizado', 'Finalizado'),    
     )    
     estado = models.CharField(max_length=12, choices=ESTADOS)
-    cuadrilla = models.ForeignKey(Cuadrilla, on_delete=models.SET_NULL, null=True)
+    cuadrilla = models.ForeignKey(Cuadrilla, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.descripcion
@@ -73,7 +74,7 @@ class ParteDeTrabajo(models.Model):
     fecha = models.DateField()
     tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=200)
-    aprobado_por = models.ForeignKey(EmpleadoDeCuadrilla, on_delete=models.SET_NULL, blank=True, null=True)
+    aprobado_por = models.ForeignKey('auth.User', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.descripcion

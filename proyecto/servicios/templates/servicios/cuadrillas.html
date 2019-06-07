@@ -4,12 +4,14 @@
 
     {% if lista_cuadrillas %}
         <h2>Cuadrillas</h2>
-
+        
+        {% if es_administrativo %}
         <p>
             <a href="{% url 'servicios:nueva_cuadrilla' %}">
                 <button type="button" class="btn btn-primary">Agregar Cuadrilla</button>
             </a>
         </p>
+        {% endif %}
 
         <table class="table">
             <tr>

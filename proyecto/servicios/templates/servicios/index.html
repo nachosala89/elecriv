@@ -5,12 +5,13 @@
 {% if lista_servicios %}
 <h2><b>Servicios</b></h2>
 
+{% if es_coordinador or es_administrativo %}
 <p>
     <a href="{% url 'servicios:nuevo_servicio'%}">
         <button type="button" class="btn btn-primary">Agregar Servicio</button>
     </a>
 </p>
-
+{% endif %}
 
 <table class="table display" id="servicios">
     <thead>

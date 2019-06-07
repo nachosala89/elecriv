@@ -25,9 +25,11 @@
             
         </table>
         
-        <p> 
+        <p>
+        {% if es_administrativo %} 
             <a href="{% url 'servicios:editar_cliente' cliente.id %}"><button type="button" class="btn btn-primary">Editar Cliente</button></a>
             <a href="{% url 'servicios:eliminar_cliente' cliente.id %}"><button type="button" class="btn btn-primary">Eliminar Cliente</button></a>
+        {% endif %}    
             <a href="{% url 'servicios:clientes' %}"><button type="button" class="btn btn-primary">Lista Clientes</button></a>
         </p>
 
