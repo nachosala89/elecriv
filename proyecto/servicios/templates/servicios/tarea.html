@@ -9,7 +9,7 @@
     <h5><b>Descripción:</b> {{ tarea.descripcion }}</h5>
     <h5><b>Servicio:</b> {{ tarea.servicio }}</h5>
     <h5><b>Estado:</b> {{ tarea.estado }}</h5>
-    <h5><b>Cuadrilla Asignada:</b> {{ tarea.cuadrilla }}</h5>
+    <h5><b>Cuadrilla Asignada:</b> {{ tarea.cuadrilla|default_if_none:"Sin Asignar"}}</h5>
 </div>
 
 {% if es_coordinador or es_administrativo %}
