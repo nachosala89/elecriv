@@ -74,7 +74,7 @@ class ParteDeTrabajo(models.Model):
     fecha = models.DateField()
     tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=200)
-    aprobado_por = models.ForeignKey('auth.User', on_delete=models.SET_NULL, blank=True, null=True)
+    aprobado_por = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.descripcion
