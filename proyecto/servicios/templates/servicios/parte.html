@@ -8,10 +8,10 @@
 <h5><b>Tarea:</b> {{parte.tarea}} ({{parte.tarea.servicio.descripcion}} - {{parte.tarea.servicio.cliente.nombre}})</h5>
 <h5><b>Descripción:</b> {{parte.descripcion}}</h5>
 <h5><b>Fecha:</b> {{parte.fecha}}</h5>
+<h5><b>Cuadrilla:</b> <a href="{% url 'servicios:cuadrilla' parte.tarea.cuadrilla.id %}">{{parte.tarea.cuadrilla}}</a></h5>
 
 {% if parte.aprobado_por %}
     <h5><b>Aprobado por:</b> {{parte.aprobado_por}}</h5>
-    <h5><b>Cuadrilla:</b> <a href="{% url 'servicios:cuadrilla' parte.tarea.cuadrilla.id %}">{{parte.tarea.cuadrilla}}</a></h5>                     
 {% else %}
     <h5><b>Aprobado por:</b> No aprobado</h5>
 {% endif %}

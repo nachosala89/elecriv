@@ -12,7 +12,7 @@ from .forms import ServicioForm, TareaForm, ParteForm, ClienteForm, CuadrillaFor
 
 from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from django.utils import timezone
 
@@ -23,7 +23,7 @@ def index(request):
     lista_servicios = Servicio.objects.order_by('-fecha_solcitud')[:20]
     es_coordinador = es_miembro(request, 'coordinador')
     es_administrativo = es_miembro(request, 'administrativo')
-    context = {'lista_servicios': lista_servicios, 'es_coordinador': es_coordinador, 'es_administrativo': es_administrativo}
+    context = {'lista_servicios': lista_servicios, 'es_coordinador': es_coordinador, 'es_administrativo': es_administrativo, 'user': request.user}
     return render(request, 'servicios/index.html', context)
 
             
@@ -370,9 +370,12 @@ def seleccionar_jefe2(request, cuadrilla_id):
             else:
                 empleado.es_jefe = False
             empleado.save()
-                        
+
         return HttpResponseRedirect(reverse('servicios:cuadrilla', args=(cuadrilla.id,)))
 
 
 def es_miembro(request, grupo):
-    return request.user.groups.filter(name=grupo).exists()
+    group = Group.objects.get(name=grupo)
+    print("GROUPS %s: %s" % (request.user.groups.all(), group))
+
+    return True if group in request.user.groups.all() else False

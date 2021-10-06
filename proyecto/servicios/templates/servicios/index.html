@@ -2,7 +2,6 @@
 
 {% block main %}
 
-{% if lista_servicios %}
 <h2><b>Servicios</b></h2>
 
 {% if es_coordinador or es_administrativo %}
@@ -13,6 +12,7 @@
 </p>
 {% endif %}
 
+{% if lista_servicios %}
 <table class="table display" id="servicios">
     <thead>
       <tr>
